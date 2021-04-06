@@ -21,8 +21,8 @@ app.use(cors({
     credentials: true
 }));
 
+// これはこういうもん。
 app.use(cookieParser());
-// app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
@@ -63,7 +63,7 @@ app.post('/register', (req, res) => {
             console.log(err);
         }
         db.query(
-            "INSERT INTO users VALUES (?, ?)",
+            "INSERT INTO users (username, password) VALUES (?, ?)",
             [username, hash],
             (err, res) => {
                 // console.log(err);
@@ -74,9 +74,9 @@ app.post('/register', (req, res) => {
 
 app.get('/login', (req, res) => {
     if (req.session.user) {
-        res.send({loggedIn: true, user: req.session.user})
+        res.send({ loggedIn: true, user: req.session.user })
     } else {
-        res.send({loggedIn: false})
+        res.send({ loggedIn: false })
 
     }
 })
@@ -96,7 +96,7 @@ app.post('/login', (req, res) => {
                 bcrypt.compare(password, result[0].password, (error, response) => {
                     if (response) {
                         req.session.user = result;
-                        console.log(req.session.user);
+                        // console.log(req.session.user);
                         res.send(result)
                     } else {
                         res.send({ message: "Wrong Combination" })
